@@ -2,6 +2,11 @@ export default class Slide {
   constructor(wrapper, slide) {
     this.wrapper = document.querySelector(wrapper);
     this.slide = document.querySelector(slide);
+    this.dist = {
+      finalPosition: 0,
+      startX: 0,
+      movement: 0,
+    };
   }
 
   bindEvents() {
@@ -11,15 +16,29 @@ export default class Slide {
   }
 
   onStart(e) {
-    e.preventDefault();
-    console.log(this);
+    e.preventDefault(); // prevent to drag the img
+    this.dist.startX = e.clientX; // get the start pointer position
     this.wrapper.addEventListener("mousemove", this.onMove);
   }
+  updatePosition(clientX) {
+    this.dist.movement = (this.dist.startX - clientX) * 1.4; // calculate the startX - the x pointer position during the mouse move
+    console.log(this.dist.movement + this.dist.finalPosition);
+    return this.dist.movement + this.dist.finalPosition;
+  }
+  moveSlide(distx) {
+    this.dist.movePosition = distx;
+    this.slide.style.transform = `translate3d(${-distx}px, 0px, 0px)`;
+  }
 
-  onMove(e) {}
+  onMove(e) {
+    const position = this.updatePosition(e.clientX);
+    this.moveSlide(position);
+  }
 
   onEnd(e) {
     this.wrapper.removeEventListener("mousemove", this.onMove);
+    this.dist.finalPosition = this.dist.movePosition;
+    console.log(this.dist);
   }
 
   addSlideEvent() {
