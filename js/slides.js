@@ -16,7 +16,6 @@ export default class Slide {
   }
 
   onStart(e) {
-    console.log(e);
     let moveType;
     if (e.type === "mousedown") {
       e.preventDefault(); // prevent to drag the img
@@ -45,10 +44,9 @@ export default class Slide {
   }
 
   onEnd(e) {
-    const moveType = e.type === "mouseup" ? "mouseve" : "touchmove";
+    const moveType = e.type === "mouseup" ? "mousemove" : "touchmove";
     this.wrapper.removeEventListener(moveType, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
-    console.log(this.dist);
   }
 
   addSlideEvent() {
