@@ -16,13 +16,20 @@ export default class Slide {
   }
 
   onStart(e) {
-    e.preventDefault(); // prevent to drag the img
-    this.dist.startX = e.clientX; // get the start pointer position
-    this.wrapper.addEventListener("mousemove", this.onMove);
+    console.log(e);
+    let moveType;
+    if (e.type === "mousedown") {
+      e.preventDefault(); // prevent to drag the img
+      this.dist.startX = e.clientX; // get the start pointer position
+      moveType = "mousemove";
+    } else {
+      this.dist.startX = e.changedTouches[0].clientX;
+      moveType = "touchmove";
+    }
+    this.wrapper.addEventListener(moveType, this.onMove);
   }
   updatePosition(clientX) {
     this.dist.movement = (this.dist.startX - clientX) * 1.4; // calculate the startX - the x pointer position during the mouse move
-    console.log(this.dist.movement + this.dist.finalPosition);
     return this.dist.movement + this.dist.finalPosition;
   }
   moveSlide(distx) {
@@ -31,19 +38,24 @@ export default class Slide {
   }
 
   onMove(e) {
-    const position = this.updatePosition(e.clientX);
+    const pointerPosition =
+      e.type === "mousemove" ? e.clientX : e.changedTouches[0].clientX;
+    const position = this.updatePosition(pointerPosition);
     this.moveSlide(position);
   }
 
   onEnd(e) {
-    this.wrapper.removeEventListener("mousemove", this.onMove);
+    const moveType = e.type === "mouseup" ? "mouseve" : "touchmove";
+    this.wrapper.removeEventListener(moveType, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
     console.log(this.dist);
   }
 
   addSlideEvent() {
     this.wrapper.addEventListener("mousedown", this.onStart);
+    this.wrapper.addEventListener("touchstart", this.onStart);
     this.wrapper.addEventListener("mouseup", this.onEnd);
+    this.wrapper.addEventListener("touchend", this.onEnd);
   }
 
   init() {
