@@ -46,6 +46,17 @@ export default class Slide {
     this.dist.finalPosition = activeSlide.position;
   }
 
+  activePrevSlide() {
+    if (this.index.prev !== undefined) {
+      this.changeSlide(this.index.prev);
+    }
+  }
+  activeNextSlide() {
+    if (this.index.next !== undefined) {
+      this.changeSlide(this.index.next);
+    }
+  }
+
   onStart(e) {
     let moveType;
     if (e.type === "mousedown") {
@@ -72,12 +83,25 @@ export default class Slide {
       e.type === "mousemove" ? e.clientX : e.changedTouches[0].clientX;
     const position = this.updatePosition(pointerPosition);
     this.moveSlide(position);
+    this.changeSlideOnEnd();
   }
 
   onEnd(e) {
     const moveType = e.type === "mouseup" ? "mousemove" : "touchmove";
     this.wrapper.removeEventListener(moveType, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
+  }
+
+  changeSlideOnEnd() {
+    // if (this.dist.movement > 120) {
+    //   this.activeNextSlide();
+    // } else if (this.dist.movement < -120) {
+    //   this.activePrevSlide();
+    // }
+    console.log(this.dist.movement);
+    if (this.dist.movement > 120) {
+      this.activeNextSlide();
+    }
   }
 
   addSlideEvent() {
