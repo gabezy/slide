@@ -25,6 +25,9 @@ img {
   max-width: 800px;
   margin: 0 20px;
 }
+.slide li:last-child {
+  transform: rotate(180deg);
+}
 
 .slide {
   transform: translate3d(0px, 0px, 0px);
